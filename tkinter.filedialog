@@ -1,0 +1,41 @@
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
+
+def open_file():
+    """Open a dialog to select a text file and display its name."""
+    file_path = filedialog.askopenfilename(
+        title="Select a Text File",
+        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+    )
+    if file_path:  # Check if a file was selected
+        file_label.config(text=f"Selected File: {file_path}")
+        try:
+            with open(file_path, 'r') as file:
+                content = file.read()
+                text_area.delete(1.0, tk.END)
+                text_area.insert(tk.END, content)
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not read the file: {e}")
+    else:
+        file_label.config(text="No file selected")
+
+# Create the main Tkinter window
+top = tk.Tk()
+top.title("File Dialog Example")
+top.geometry("600x400")
+
+# Add a button to open the file dialog
+open_button = tk.Button(top, text="Open File", command=open_file)
+open_button.pack(pady=10)
+
+# Label to display the selected file's path
+file_label = tk.Label(top, text="No file selected", wraplength=500)
+file_label.pack(pady=10)
+
+# Text area to display the content of the file
+text_area = tk.Text(top, height=15, width=70)
+text_area.pack(pady=10)
+
+# Run the Tkinter event loop
+top.mainloop()
